@@ -1,5 +1,6 @@
 require 'cocoapods-pahealth-bin/command/bin/init'
 require 'cocoapods-pahealth-bin/command/bin/spec'
+require 'cocoapods-pahealth-bin/command/bin/update'
 require 'cocoapods-pahealth-bin/helpers'
 
 module Pod
