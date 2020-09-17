@@ -1,5 +1,7 @@
 require 'cocoapods-pahealth-bin/command/bin/init'
+require 'cocoapods-pahealth-bin/command/bin/spec'
 require 'cocoapods-pahealth-bin/helpers'
+
 module Pod
   class Command
     # This is an example of a cocoapods plugin adding a top-level subcommand
@@ -21,6 +23,8 @@ module Pod
     #
     class Bin < Command
       include CBin::SourcesHelper
+      include CBin::SpecFilesHelper
+
       self.abstract_command = true
 
       self.default_subcommand = 'open'

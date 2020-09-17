@@ -8,7 +8,7 @@ module CBin
 
     def template_hash
       {
-          'code_repo_url' => { description: '私有源 Git 地址', default: 'http://code.paic.com.cn/git/pahealth_private_repo.git' },
+          'code_repo_url' => { description: '私有源 Git 地址', default: 'http://domain/git/pahealth_private_repo.git' },
           #'binary_repo_url' => { description: '二进制私有源 Git 地址', default: 'git@git.2dfire.net:ios/cocoapods-spec-binary.git' },
           #'binary_download_url' => { description: '二进制下载地址，内部会依次传入组件名称与版本，替换字符串中的 %s ', default: 'http://iosframeworkserver-shopkeeperclient.app.2dfire.com/download/%s/%s.zip' },
           # 'binary_type' => { description: '二进制打包类型', default: 'framework', selection: %w[framework library] },

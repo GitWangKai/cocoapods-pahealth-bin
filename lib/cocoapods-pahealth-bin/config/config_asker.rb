@@ -52,6 +52,10 @@ module CBin
         print "\n设置完成.\n".green
       end
     end
+
+    def binary_repo_url
+      # code here
+    end
   end
 end
 

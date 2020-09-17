@@ -14,13 +14,20 @@ module CBin
       sources_manager.code_source
     end
 
+    def trunk_source
+      sources_manager.trunk_source
+    end
+
     # 优先采用对应依赖的 source
     # cocoapods 内部会先匹配前面符合的 specification
     # 只允许二进制的 specification subspec 比源码的 specification subspec 多
     #
     def valid_sources(code_dependencies = false)
-      sources = [binary_source, code_source]
-      sources.reverse! if code_dependencies
+      sources = [code_source,trunk_source]
+      # unless code_dependencies
+      #   sources << binary_source
+      #   sources.reverse!
+      # end
       sources
     end
 
