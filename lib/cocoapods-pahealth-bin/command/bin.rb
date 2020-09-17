@@ -1,3 +1,5 @@
+require 'cocoapods-pahealth-bin/command/bin/init'
+require 'cocoapods-pahealth-bin/helpers'
 module Pod
   class Command
     # This is an example of a cocoapods plugin adding a top-level subcommand
@@ -5,7 +7,7 @@ module Pod
     #
     # You can also create subcommands of existing or new commands. Say you
     # wanted to add a subcommand to `list` to show newly deprecated pods,
-    # (e.g. `pod list deprecated`), there are a few things that would need
+    # (e.g. `pod list deprecsated`), there are a few things that would need
     # to change.
     #
     # - move this file to `lib/pod/command/list/deprecated.rb` and update
@@ -18,26 +20,27 @@ module Pod
     #       in the `plugins.json` file, once your plugin is released.
     #
     class Bin < Command
-      self.summary = 'Short description of cocoapods-pahealth-bin.'
+      include CBin::SourcesHelper
+      self.abstract_command = true
 
+      self.default_subcommand = 'open'
+      self.summary = '组件远程私有化插件.'
       self.description = <<-DESC
-        Longer description of cocoapods-pahealth-bin.
+        组件远程私有化插件，组件发布，组件更新。
       DESC
 
-      self.arguments = 'NAME'
 
       def initialize(argv)
-        @name = argv.shift_argument
+        require 'cocoapods-pahealth-bin/native'
+        @help = argv.flag?('help')
         super
       end
 
       def validate!
         super
-        help! 'A Pod name is required.' unless @name
-      end
-
-      def run
-        UI.puts "Add your implementation for the cocoapods-pahealth-bin plugin in #{__FILE__}"
+        # 这里由于 --help 是在 validate! 方法中提取的，会导致 --help 失效
+        # pod lib create 也有这个问题
+        banner! if @help
       end
     end
   end

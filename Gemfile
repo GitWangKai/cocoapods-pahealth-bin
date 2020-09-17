@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in cocoapods-pahealth-bin.gemspec
+# Specify your gem's dependencies in cocoapods-pahealthbin.gemspec
 gemspec
 
 group :development do
