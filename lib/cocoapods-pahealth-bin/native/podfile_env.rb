@@ -5,8 +5,10 @@ module Pod
     USE_BINARIES_SELECTOR = 'use_binaries_selector'
     ALLOW_PRERELEASE = 'allow_prerelease'
     USE_PLUGINS = 'use_plugins'
+    CONFIGURATION_DEPENDENCE = 'configuration_dependence'
 
     module ENVExecutor
+
       def execute_with_bin_plugin(&block)
         execute_with_key(USE_PLUGINS, -> { 'cocoapods-pahealth-bin' }, &block)
       end

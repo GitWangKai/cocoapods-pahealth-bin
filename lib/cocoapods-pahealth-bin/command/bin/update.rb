@@ -1,4 +1,5 @@
 require 'cocoapods-pahealth-bin/command/bin/repo/update'
+require 'cocoapods-pahealth-bin/native/podfile'
 require 'cocoapods'
 
 module Pod
@@ -9,6 +10,11 @@ module Pod
         self.arguments = [
             CLAide::Argument.new('NAME.podspec', false)
         ]
+
+        def self.options
+          [
+          ].concat(Pod::Command::Spec::Lint.options).concat(super).uniq
+        end
 
         def initialize(argv)
           super
@@ -30,8 +36,7 @@ module Pod
 
         def pod_update_no_repo_update
           argvs = [
-              "--no-repo-update",
-              "--sources=#{sources_option(true, @sources)}"
+              "--no-repo-update"
           ]
           update = Pod::Command::Update.new(CLAide::ARGV.new(argvs))
           update.validate!

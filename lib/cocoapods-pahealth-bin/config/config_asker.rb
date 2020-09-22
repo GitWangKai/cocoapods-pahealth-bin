@@ -40,8 +40,9 @@ module CBin
       def wellcome_message
         print <<~EOF
 
-          开始设置二进制化初始信息.
+          开始设置组件私有化初始信息.
           所有的信息都会保存在 #{CBin.config.config_file} 文件中.
+          %w[pahealth_test.yml pahealth_uat.yml] 
           你可以在对应目录下手动添加编辑该文件. 文件包含的配置信息样式如下：
 
           #{CBin.config.default_config.to_yaml}
@@ -52,10 +53,5 @@ module CBin
         print "\n设置完成.\n".green
       end
     end
-
-    def binary_repo_url
-      # code here
-    end
   end
 end
-

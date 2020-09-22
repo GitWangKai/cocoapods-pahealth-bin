@@ -25,6 +25,11 @@ module Pod
         hash_pods_use_source += Array(pods)
         set_internal_hash_value(USE_SOURCE_PODS, hash_pods_use_source)
       end
+
+      def set_configuration_dependence(dependence = "uat")
+        set_internal_hash_value(CONFIGURATION_DEPENDENCE, dependence)
+      end
+
     end
 
     alias old_plugins plugins
@@ -55,11 +60,15 @@ module Pod
       get_internal_hash_value(USE_SOURCE_PODS, []) + String(ENV[USE_SOURCE_PODS]).split('|').uniq
     end
 
+    def configuration_dependence
+      get_internal_hash_value(CONFIGURATION_DEPENDENCE, "uat") ||  ENV[CONFIGURATION_DEPENDENCE] == "uat"
+    end
+
     private
 
     def valid_bin_plugin
-      unless plugins.keys.include?('cocoapods-bin')
-        raise Pod::Informative, 'You should add `plugin \'cocoapods-bin\'` before using its DSL'
+      unless plugins.keys.include?('cocoapods-pahealth-bin')
+        raise Pod::Informative, 'You should add `plugin \'cocoapods-pahealth-bin\'` before using its DSL'
       end
     end
 

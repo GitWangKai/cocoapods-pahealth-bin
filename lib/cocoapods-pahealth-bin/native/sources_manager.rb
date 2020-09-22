@@ -4,19 +4,16 @@ require 'cocoapods-pahealth-bin/config/config'
 module Pod
   class Source
     class Manager
-      # 源码 source
+      # 私有源
       def code_source
         source_with_name_or_url(CBin.config.code_repo_url)
       end
 
-      # 二进制 source
-      def binary_source
-        source_with_name_or_url(CBin.config.binary_repo_url)
-      end
-
+      # 公有源 source
       def trunk_source
         source_with_name_or_url('https://github.com/CocoaPods/Specs.git')
       end
+
     end
   end
 end

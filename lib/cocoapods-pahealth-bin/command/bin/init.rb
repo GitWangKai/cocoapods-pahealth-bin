@@ -6,8 +6,8 @@ module Pod
       class Init < Bin
         self.summary = '初始化插件.'
         self.description = <<-DESC
-          创建 #{CBin.config.config_file} 文件，在其中保存插件需要的配置信息，
-          如二进制私有源地址、源码私有源地址等。
+          创建.yml文件，在其中保存组件需要的配置信息，
+          如私有源地址、依赖环境等。
         DESC
 
         def self.options

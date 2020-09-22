@@ -1,23 +1,61 @@
 require 'yaml'
+require 'cocoapods-pahealth-bin/native/podfile'
+require 'cocoapods-pahealth-bin/native/podfile_env'
+require 'cocoapods/generate'
 
 module CBin
   class Config
     def config_file
-      File.expand_path("#{Pod::Config.instance.home_dir}/bin.yml")
+      config_file_with_configuration_dependence(configuration_dependence)
     end
 
     def template_hash
       {
-          'code_repo_url' => { description: '私有源 Git 地址', default: 'http://domain/git/pahealth_private_repo.git' },
-          #'binary_repo_url' => { description: '二进制私有源 Git 地址', default: 'git@git.2dfire.net:ios/cocoapods-spec-binary.git' },
-          #'binary_download_url' => { description: '二进制下载地址，内部会依次传入组件名称与版本，替换字符串中的 %s ', default: 'http://iosframeworkserver-shopkeeperclient.app.2dfire.com/download/%s/%s.zip' },
-          # 'binary_type' => { description: '二进制打包类型', default: 'framework', selection: %w[framework library] },
-          #'download_file_type' => { description: '下载二进制文件类型', default: 'zip', selection: %w[zip tgz tar tbz txz dmg] }
+          'configuration_dependence' => { description: '依赖环境', default: 'uat', selection: %w[uat test] },
+          'code_repo_url' => { description: '私有源 Git 地址', default: 'uat环境:https://github.com/GitWangKai/ReleasePrivateRepo.git test环境:https://github.com/GitWangKai/TestPrivateRepo.git' },
       }
     end
 
+    def config_file_with_configuration_dependence(configuration_dependence)
+      file = config_uat_dependence_file
+      if configuration_dependence == "test"
+        file = config_test_dependence_file
+        puts "\n======  #{configuration_dependence} 环境 ========"
+      elsif configuration_dependence == "uat"
+        puts "\n======  #{configuration_dependence} 环境 ========"
+      else
+        raise "\n=====  #{configuration_dependence} 参数有误，请检查%w[uat test]===="
+      end
+
+      File.expand_path("#{Pod::Config.instance.home_dir}/#{file}")
+    end
+
+    def configuration_dependence
+      #如果是dev 再去 podfile的配置文件中获取，确保是正确的， pod update时会用到
+      if @configuration_dependence == "uat" || @configuration_dependence == nil
+        if Pod::Config.instance.podfile
+          configuration_dependence ||= Pod::Config.instance.podfile.configuration_dependence
+        end
+        configuration_dependence ||= "uat"
+        @configuration_dependence = configuration_dependence
+      end
+      @configuration_dependence
+    end
+
+    def set_configuration_dependence(dependence)
+      @configuration_dependence = dependence
+    end
+
+    def config_test_dependence_file
+      "pahealth_test.yml"
+    end
+
+    def config_uat_dependence_file
+      "pahealth_uat.yml"
+    end
+
     def sync_config(config)
-      File.open(config_file, 'w+') do |f|
+      File.open(config_file_with_configuration_dependence(config['configuration_dependence']), 'w+') do |f|
         f.write(config.to_yaml)
       end
     end
@@ -38,6 +76,7 @@ module CBin
 
     def config
       @config ||= begin
+                    puts "====== cocoapods-pahealth-bin #{CocoapodsPahealthBin::VERSION} 版本 ======== \n"
                     @config = OpenStruct.new load_config
                     validate!
                     @config
@@ -75,5 +114,6 @@ module CBin
   def self.config
     @config ||= Config.new
   end
-end
 
+
+end

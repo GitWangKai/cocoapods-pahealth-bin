@@ -6,32 +6,17 @@ module CBin
       Pod::Config.instance.sources_manager
     end
 
-    def binary_source
-      sources_manager.binary_source
-    end
-
     def code_source
       sources_manager.code_source
     end
 
-    def trunk_source
-      sources_manager.trunk_source
-    end
-
-    # 优先采用对应依赖的 source
-    # cocoapods 内部会先匹配前面符合的 specification
-    # 只允许二进制的 specification subspec 比源码的 specification subspec 多
-    #
-    def valid_sources(code_dependencies = false)
+    def valid_sources
       sources = [code_source]
-      unless code_dependencies
-        sources << trunk_source
-      end
       sources
     end
 
-    def sources_option(code_dependencies, additional_sources)
-      (valid_sources(code_dependencies).map(&:url) + Array(additional_sources)).join(',')
+    def sources_option(additional_sources)
+      (valid_sources.map(&:url) + Array(additional_sources)).join(',')
     end
   end
 end
