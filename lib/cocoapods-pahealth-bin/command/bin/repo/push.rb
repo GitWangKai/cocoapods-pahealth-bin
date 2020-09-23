@@ -23,31 +23,28 @@ module Pod
 
           def initialize(argv)
             @podspec = argv.shift_argument
-            @trunk_dependencies = argv.flag?('trunk-dependencies')
-            @sources = argv.option('sources') || []
+            @sources = argv.option('sources')
+            @dependence = argv.option('repo')
+            #默认test
+            @dependence ||= 'test'
+            CBin.config.set_configuration_dependence(@dependence)
             super
 
             @additional_args = argv.remainder!
           end
 
           def run
-            Podfile.execute_with_bin_plugin do
-              Podfile.execute_with_allow_prerelease(@allow_prerelease) do
-                Podfile.execute_with_use_binaries(!@code_dependencies) do
-                  argvs = [
-                      repo,
-                      "--sources=#{sources_option(!@trunk_dependencies, @sources)}",
-                      *@additional_args
-                  ]
+            argvs = [
+                repo,
+                "--sources=#{sources_option(@sources)}",
+                *@additional_args
+            ]
 
-                  argvs << spec_file if spec_file
+            argvs << spec_file if spec_file
 
-                  push = Pod::Command::Repo::Push.new(CLAide::ARGV.new(argvs))
-                  push.validate!
-                  push.run
-                end
-              end
-            end
+            push = Pod::Command::Repo::Push.new(CLAide::ARGV.new(argvs))
+            push.validate!
+            push.run
           ensure
             clear_binary_spec_file_if_needed unless @reserve_created_spec
           end
